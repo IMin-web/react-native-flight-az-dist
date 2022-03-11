@@ -1,70 +1,49 @@
-import { PanResponder, Animated, Button, View, StyleSheet} from 'react-native';
-import React, { useRef, useState } from "react";
+import { View, StyleSheet, Text} from 'react-native';
+import React, {useState, useEffect } from "react";
+import locate from "./locate";
+import Dalnost from "./Dalnost";
+import Azimut from "./Azimut";
+import { Table, Row} from 'react-native-table-component';
+
 
 export default function HomeScreen({navigation}) {
-    const fadeAnim = useRef(new Animated.Value(1)).current;
-    const [boxAnim, setBoxAnim] = useState(false)
-    const pan = useRef(new Animated.ValueXY()).current;
+    const [locBase, setLocBase] = useState([]);
+    const [lat, setLat] = useState(61.28527651284786);
+    const [lon, setLon] = useState(63.17582723137468);
+    const data ={
+        tableHead: ['Азимут', 'Дальность', 'Высота', 'Скорость', 'Курс']
+    }
 
-    const panResponder = PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
-      onPanResponderMove: Animated.event([
-        null,
-        {
-          dx: pan.x, // x,y are Animated.Value
-          dy: pan.y,
-        },
-      ]),
-      onPanResponderRelease: () => {
-        Animated.spring(
-          pan, // Auto-multiplexed
-          { toValue: { x: 0, y: 0 } } // Back to zero
-        ).start();
-      },
+    useEffect(() => {
+      let result;
+      locate(lat, lon)
+        .then((res) => (result = res))
+        .then((res) => result.map((item) => item.push(Dalnost(item, lat, lon))))
+        .then((res) => result.map((item) => item.push(Azimut(item, lat, lon))))
+        .then((res) => setLocBase(result));
     });
-
-  const fadeIn = () => {
-    // Will change fadeAnim value to 1 in 5 seconds
-    Animated.timing(fadeAnim, {
-      toValue: 1,
-      duration: 1000
-    }).start();
-    setBoxAnim(false)
-  };
-
-  const fadeOut = () => {
-    // Will change fadeAnim value to 0 in 3 seconds
-    Animated.timing(fadeAnim, {
-      toValue: 0,
-      duration: 1000
-    }).start();
-    setBoxAnim(true)
-  };
-
-  function boxHandler(){
-    boxAnim ? fadeIn() : fadeOut();
-  }
+    
 
     return (
-        <View style={{flex:1, flexDirection: 'column', alignItems: 'center', justifyContent:'center'}}>
-        <Animated.View {...panResponder.panHandlers} style={[styles.animated, pan.getLayout()]}/>
-        {/* <Button onPress={boxHandler} title='Press me!'></Button> */}
-      <Button
-        title="Go to Map"
-        onPress={() =>
-          navigation.navigate('Map')
-        }
-      />
+        <View>
+        {locBase.map((item)=>(
+            <View>
+                <Text style={styles.tableName}>{item[17] || "Без названия"}</Text>
+        <View style={styles.container}>
+            <Table borderStyle={{borderWidth: 1, borderColor: '#c8e1ff'}}>
+          <Row data={data.tableHead} style={styles.head} textStyle={styles.text}/>
+          <Row style={styles.data} data={[`${Math.round(item[20])}`,`${Math.round(item[19] / 100) / 10}`,`${Math.round(item[5] / 0.33) / 10}`, `${Math.round(item[6] * 1.87)}`, `${item[4]}` ]} textStyle={styles.text}/>
+        </Table>
+      </View> 
       </View>
+      ))}
+    </View>
     );
   };
   const styles=StyleSheet.create({
-    animated:{
-        position:'absolute',
-        top:50,
-        left:50,
-        height: 100,
-        width:100,
-        backgroundColor:'#f194ff',
-    }
+      tableName: {color: 'tomato', textAlign: 'center', fontWeight: 'bold', fontSize: 24},
+    container: { flex: 3, marginBottom: 90, backgroundColor: '#fff'},
+  head: { height: 40, backgroundColor: '#f1f8ff' },
+  text: { margin: 2, textAlign:'center'},
+  data: {height:50, backgroundColor:'#fff'}
 })

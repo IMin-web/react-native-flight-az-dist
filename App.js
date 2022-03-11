@@ -1,6 +1,5 @@
-import React, { useState } from "react";
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button, Alert, TextInput, Switch, } from 'react-native';
+import React from "react";
+import { StyleSheet, View} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import HomeScreen from "./HomeScreen";
 import Map from "./Map";
@@ -18,23 +17,22 @@ const Tab = createBottomTabNavigator();
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
 
-            if (route.name === 'Home') {
+            if (route.name === 'Таблица') {
               iconName = focused
                 ? 'ios-information-circle'
                 : 'ios-information-circle-outline';
-            } else if (route.name === 'Map') {
+            } else if (route.name === 'Карта') {
               iconName = focused ? 'ios-list-circle-sharp' : 'ios-list';
             }
-
-            // You can return any component that you like here!
             return <Ionicons name={iconName} size={size} color={color} />;
           },
           tabBarActiveTintColor: 'tomato',
           tabBarInactiveTintColor: 'gray',
         })}
       >
-        <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="Map" component={Map} />
+                <Tab.Screen name="Таблица" component={HomeScreen} />
+
+        <Tab.Screen name="Карта" component={Map} />
       </Tab.Navigator>
     </NavigationContainer>
     </View>
@@ -45,8 +43,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    // alignItems: 'center',
-    // justifyContent: 'center',
   },
   input: {
     height: 40,
@@ -58,6 +54,5 @@ const styles = StyleSheet.create({
     height: 40,
     margin: 12,
     borderWidth: 1,
-    // padding: 10,
   },
 });
