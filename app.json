@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "ReactNative",
-    "slug": "ReactNative",
+    "name": "flight-az-dist",
+    "slug": "flight-az-dist",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -21,6 +21,11 @@
       "bundleIdentifier": "myApp"
     },
     "android": {
+      "config":{
+        "googleMaps":{
+          "apiKey": "AIzaSyCADY_emRVFxVopL0O8MJxY0Xfp3Q6v1bs"
+        }
+      },
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
