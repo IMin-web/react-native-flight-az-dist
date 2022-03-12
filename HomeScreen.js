@@ -1,4 +1,4 @@
-import { View, StyleSheet, Text} from 'react-native';
+import { View, StyleSheet, Text, ScrollView} from 'react-native';
 import React, {useState, useEffect } from "react";
 import locate from "./locate";
 import Dalnost from "./Dalnost";
@@ -25,7 +25,7 @@ export default function HomeScreen({navigation}) {
     
 
     return (
-        <View>
+        <ScrollView>
         {locBase.map((item)=>(
             <View>
                 <Text style={styles.tableName}>{item[17] || "Без названия"}</Text>
@@ -37,13 +37,13 @@ export default function HomeScreen({navigation}) {
       </View> 
       </View>
       ))}
-    </View>
+    </ScrollView>
     );
   };
   const styles=StyleSheet.create({
       tableName: {color: 'tomato', textAlign: 'center', fontWeight: 'bold', fontSize: 24},
-    container: { flex: 3, marginBottom: 90, backgroundColor: '#fff'},
-  head: { height: 40, backgroundColor: '#f1f8ff' },
-  text: { margin: 2, textAlign:'center'},
-  data: {height:50, backgroundColor:'#fff'}
+    container: { flex: 3, marginBottom: 10, backgroundColor: '#fff'},
+  head: { height: 30, backgroundColor: '#f1f8ff' },
+  text: { margin: 2, textAlign:'center', fontSize:16},
+  data: {height:40, backgroundColor:'#fff'}
 })
