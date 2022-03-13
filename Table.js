@@ -1,33 +1,19 @@
 import { View, StyleSheet, Text, ScrollView} from 'react-native';
-import React, {useState, useEffect } from "react";
-import locate from "./locate";
-import Dalnost from "./Dalnost";
-import Azimut from "./Azimut";
+import React from "react";
 import { Table, Row} from 'react-native-table-component';
+import { useSelector} from "react-redux";
+import { selectData } from "./dataSlice";
 
-
-export default function HomeScreen({navigation}) {
-    const [locBase, setLocBase] = useState([]);
-    const [lat, setLat] = useState(61.28527651284786);
-    const [lon, setLon] = useState(63.17582723137468);
+export default function TableComponent() {
+  const locBase = useSelector(selectData);
     const data ={
         tableHead: ['Азимут', 'Дальность', 'Высота', 'Скорость', 'Курс']
     }
 
-    useEffect(() => {
-      let result;
-      locate(lat, lon)
-        .then((res) => (result = res))
-        .then((res) => result.map((item) => item.push(Dalnost(item, lat, lon))))
-        .then((res) => result.map((item) => item.push(Azimut(item, lat, lon))))
-        .then((res) => setLocBase(result));
-    });
-    
-
     return (
         <ScrollView>
-        {locBase.map((item)=>(
-            <View>
+        {locBase.value[0] !== undefined ? locBase.value.map((item)=>(
+            <View key={item[0]}>
                 <Text style={styles.tableName}>{item[17] || "Без названия"}</Text>
         <View style={styles.container}>
             <Table borderStyle={{borderWidth: 1, borderColor: '#c8e1ff'}}>
@@ -36,7 +22,8 @@ export default function HomeScreen({navigation}) {
         </Table>
       </View> 
       </View>
-      ))}
+      )): null}
+      
     </ScrollView>
     );
   };
