@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import MapView, { Marker, Callout } from "react-native-maps";
 import {
   StyleSheet,
@@ -16,11 +16,14 @@ import { swap } from "./coordinateSlice";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Map() {
+  const map = useRef(null)
   const coordinate = useSelector(selectCoordinate);
   const locBase = useSelector(selectData);
   const dispatch = useDispatch();
   const [form, setForm] = useState(0);
   const [region, setRegion] = useState(0);
+  const [longitude, setLongitude] = useState(0);
+  const [latitude, setLatitude] = useState(0);
   
   const storeData = async () => {
     try {
@@ -30,13 +33,37 @@ export default function Map() {
       // saving error
     }
   };
+  const getData = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem("@storage_Key");
+      return jsonValue != null ? JSON.parse(jsonValue) : null;
+    } catch (e) {
+      // error reading value
+    }
+  };
+//  getData().then((res) => return (res[1])});
+
+  useEffect(()=>{
+    console.log('first')
+    getData().then((res) => {setLatitude(res[1]); setLongitude(res[2])})
+  },[])
 
   return (
     <View style={styles.container}>
       <MapView
+      ref={(current) => map.current = current}
+      onLayout={() => {
+          map.current.animateCamera({
+            center:{
+              latitude: latitude,
+              longitude: longitude,
+            },
+              pitch: 70
+          })
+      }}
         initialRegion={{
-          latitude: coordinate.lat,
-          longitude: coordinate.lon,
+          latitude: latitude,
+          longitude: longitude,
           latitudeDelta: 1.2722,
           longitudeDelta: 0.9721,
         }}
@@ -44,6 +71,7 @@ export default function Map() {
         onRegionChangeComplete={(region) => {
           setRegion(region);
         }}
+        mapType={"standard"}
       >
         {locBase.value[0] !== undefined
           ? locBase.value.map((item) => (
@@ -57,7 +85,7 @@ export default function Map() {
                 <Callout tooltip={true}>
                   {form === item[0] ? (
                     <View style={styles.marker}>
-                      <Text>Название: {item[17] || "Без названия"}</Text>
+                      <Text >{item[17] || "Без названия"}</Text>
                       <Text>Азимут: {Math.round(item[20])}</Text>
                       <Text>Дальность: {Math.round(item[19] / 100) / 10}</Text>
                       <Text>Высота: {Math.round(item[5] / 0.33) / 10}</Text>
