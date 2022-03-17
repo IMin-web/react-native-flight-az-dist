@@ -14,6 +14,8 @@ import { selectCoordinate } from "./coordinateSlice";
 import { selectData } from "./dataSlice";
 import { swap } from "./coordinateSlice";
 import {getData, storeData} from './dataFunction'
+import Ionicons from "react-native-vector-icons/Ionicons";
+
 
 export default function Map() {
   const map = useRef(null)
@@ -42,20 +44,13 @@ export default function Map() {
           latitudeDelta: 1.2722,
           longitudeDelta: 0.9721,
         }}
-        onPress={ () => 
-          {map.current.animateCamera({
-            center:{
-              latitude: +coordinate.lat,
-              longitude: +coordinate.lon,
-            },
-          })
-        // console.log(event.nativeEvent.coordinate.latitude);
-      }}
+        
         style={styles.map}
         onRegionChange={(region) => {
           setRegion(region);
         }}
         mapType={"standard"}
+        // onMarkerPress={(marker) => {console.log(marker);}}
       >
         {locBase.value[0] !== undefined
           ? locBase.value.map((item) => (
@@ -84,12 +79,6 @@ export default function Map() {
       </MapView>
       <View style={styles.coordinate}>
         <View>
-          <Text>
-            {coordinate.lat}
-          </Text>
-          <Text>{coordinate.lon}</Text>
-        </View>
-        <View>
           <Pressable
             style={styles.button}
             onPress={() => {
@@ -97,7 +86,20 @@ export default function Map() {
               getData().then((res)=>{dispatch(swap({ lat: region.latitude, lon: region.longitude }))});
             }}
           >
-            <Text style={styles.text}>поиск</Text>
+            <Ionicons name={'search'} size={30} color={'tomato'} />
+          </Pressable>
+          <Pressable
+            style={styles.button}
+            onPress={ () => 
+              {map.current.animateCamera({
+                center:{
+                  latitude: +coordinate.lat,
+                  longitude: +coordinate.lon,
+                },
+              })
+          }}
+          >
+            <Ionicons name={'locate'} size={30} color={'tomato'} />
           </Pressable>
         </View>
       </View>
@@ -108,7 +110,7 @@ export default function Map() {
 const styles = StyleSheet.create({
   marker: {
     position: "absolute",
-    width: 140,
+    width: 160,
     backgroundColor: "#fff",
   },
   container: {
@@ -125,16 +127,16 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     position: "absolute",
-    bottom: 0,
+    top: 10,
+    right:10,
   },
   button: {
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 12,
-    paddingHorizontal: 32,
+    paddingVertical: 10,
+    paddingHorizontal: 10,
     borderRadius: 4,
     elevation: 3,
-    backgroundColor: "black",
+    backgroundColor: "gray",
+    marginBottom:5,
   },
   text: {
     fontSize: 16,
