@@ -62,8 +62,8 @@ export default function Map() {
           })
       }}
         initialRegion={{
-          latitude: latitude,
-          longitude: longitude,
+          latitude: coordinate.lat,
+          longitude: coordinate.lon,
           latitudeDelta: 1.2722,
           longitudeDelta: 0.9721,
         }}
