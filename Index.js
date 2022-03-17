@@ -13,41 +13,17 @@ import { selectCoordinate } from "./coordinateSlice";
 import { set } from "./dataSlice"
 import { selectData } from "./dataSlice";
 import * as Location from 'expo-location';
-import { swap } from "./coordinateSlice";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {fetchCoords} from './coordinateSlice'
 
 export default function Index() {
     const Tab = createBottomTabNavigator();
     const coordinate = useSelector(selectCoordinate); 
     const dispatch = useDispatch();
     const locBase = useSelector(selectData);
-    // const [location, setLocation] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
-  
-  const getData = async () => {
-      try {
-        const jsonValue = await AsyncStorage.getItem('@storage_Key')
-      return jsonValue != null ? JSON.parse(jsonValue) : null;
-      } catch(e) {
-        // error reading value
-      }
-    }
-
-    useEffect(()=>{
-      getData().then((res)=>{dispatch(swap({name:res[0], lat: res[1], lon: res[2] }))});
-    },[])
-  
-    // useEffect(() => {
-    //   (async () => {
-    //     let { status } = await Location.requestForegroundPermissionsAsync();
-    //     if (status !== 'granted') {
-    //       setErrorMsg('Permission to access location was denied');
-    //       return;
-    //     }
-    //     let location = await Location.getCurrentPositionAsync({});
-    //     dispatch(swap({ lat: location.coords.latitude, lon: location.coords.longitude }))
-    //   })();
-    // }, []);
+    useEffect(() => {
+      dispatch(fetchCoords());
+    }, [dispatch]);
  
     useEffect(() => {
       let result;

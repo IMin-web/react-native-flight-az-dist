@@ -13,7 +13,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { selectCoordinate } from "./coordinateSlice";
 import { selectData } from "./dataSlice";
 import { swap } from "./coordinateSlice";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {getData, storeData} from './dataFunction'
 
 export default function Map() {
   const map = useRef(null)
@@ -22,32 +22,7 @@ export default function Map() {
   const dispatch = useDispatch();
   const [form, setForm] = useState(0);
   const [region, setRegion] = useState(0);
-  const [longitude, setLongitude] = useState(0);
-  const [latitude, setLatitude] = useState(0);
   
-  const storeData = async () => {
-    try {
-      const jsonValue = JSON.stringify([, region.latitude, region.longitude]);
-      await AsyncStorage.setItem("@storage_Key", jsonValue);
-    } catch (e) {
-      // saving error
-    }
-  };
-  const getData = async () => {
-    try {
-      const jsonValue = await AsyncStorage.getItem("@storage_Key");
-      return jsonValue != null ? JSON.parse(jsonValue) : null;
-    } catch (e) {
-      // error reading value
-    }
-  };
-//  getData().then((res) => return (res[1])});
-
-  useEffect(()=>{
-    console.log('first')
-    getData().then((res) => {setLatitude(res[1]); setLongitude(res[2])})
-  },[])
-
   return (
     <View style={styles.container}>
       <MapView
@@ -55,20 +30,29 @@ export default function Map() {
       onLayout={() => {
           map.current.animateCamera({
             center:{
-              latitude: latitude,
-              longitude: longitude,
+              latitude: +coordinate.lat,
+              longitude: +coordinate.lon,
             },
-              pitch: 70
+              pitch: 50
           })
       }}
         initialRegion={{
-          latitude: coordinate.lat,
-          longitude: coordinate.lon,
+          latitude: +coordinate.lat,
+          longitude: +coordinate.lon,
           latitudeDelta: 1.2722,
           longitudeDelta: 0.9721,
         }}
+        onPress={ () => 
+          {map.current.animateCamera({
+            center:{
+              latitude: +coordinate.lat,
+              longitude: +coordinate.lon,
+            },
+          })
+        // console.log(event.nativeEvent.coordinate.latitude);
+      }}
         style={styles.map}
-        onRegionChangeComplete={(region) => {
+        onRegionChange={(region) => {
           setRegion(region);
         }}
         mapType={"standard"}
@@ -109,7 +93,8 @@ export default function Map() {
           <Pressable
             style={styles.button}
             onPress={() => {
-              storeData().then(()=>{dispatch(swap({ lat: region.latitude, lon: region.longitude }))});
+              storeData('Координаты с карты', region.latitude, region.longitude);
+              getData().then((res)=>{dispatch(swap({ lat: region.latitude, lon: region.longitude }))});
             }}
           >
             <Text style={styles.text}>поиск</Text>

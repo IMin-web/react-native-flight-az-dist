@@ -13,8 +13,8 @@ import { selectCoordinate } from "./coordinateSlice";
 import { selectData } from "./dataSlice";
 import { swap } from "./coordinateSlice";
 import { set } from "./dataSlice";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Picker } from "@react-native-picker/picker";
+import {getData, storeData} from './dataFunction'
 
 export default function App() {
   const [name, setName] = useState("");
@@ -23,27 +23,9 @@ export default function App() {
   // const [data, setData] = useState();
   const coordinate = useSelector(selectCoordinate);
   const dispatch = useDispatch();
-  
-  const storeData = async () => {
-    try {
-      const jsonValue = JSON.stringify([name, lat, lon]);
-      await AsyncStorage.setItem("@storage_Key", jsonValue);
-    } catch (e) {
-      // saving error
-    }
-  };
-
-  const getData = async () => {
-    try {
-      const jsonValue = await AsyncStorage.getItem("@storage_Key");
-      return jsonValue != null ? JSON.parse(jsonValue) : null;
-    } catch (e) {
-      // error reading value
-    }
-  };
 
   function clickHandler() {
-    storeData();
+    storeData(name, lat, lon);
     getData().then((res) => {
       dispatch(swap({ name: res[0], lat: res[1], lon: res[2] }));
     });
