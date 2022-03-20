@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Pressable,
   Text,
@@ -20,14 +20,15 @@ export default function App() {
   const [name, setName] = useState("");
   const [lat, setLat] = useState(0);
   const [lon, setLon] = useState(0);
-  // const [data, setData] = useState();
+  const [rad, setRad] = useState(0);
   const coordinate = useSelector(selectCoordinate);
   const dispatch = useDispatch();
 
   function clickHandler() {
-    storeData(name, lat, lon);
+    storeData(name, lat, lon, rad);
     getData().then((res) => {
-      dispatch(swap({ name: res[0], lat: res[1], lon: res[2] }));
+      console.log(res);
+      dispatch(swap({ name: res[0], lat: res[1], lon: res[2], rad:res[3] }));
     });
   }
 
@@ -46,6 +47,18 @@ export default function App() {
         <View style={styles.inputContainer}>
             <Text style={styles.text}>Долгота</Text>
         <Text style={styles.text}>{coordinate.lon}</Text>
+        </View>
+        <View style={styles.inputContainer}>
+            <Text style={styles.text}>Радиус</Text>
+        <Text style={styles.text}>{coordinate.rad}</Text>
+        </View>
+        <View style={styles.inputContainer}>
+            <Text style={styles.text}>Предел широты</Text>
+        <Text style={styles.text}>{coordinate.latPred}</Text>
+        </View>
+        <View style={styles.inputContainer}>
+            <Text style={styles.text}>Предел долготы</Text>
+        <Text style={styles.text}>{coordinate.lonPred}</Text>
         </View>
         {/* <Picker 
   selectedValue={selectedProfile}
@@ -76,7 +89,7 @@ export default function App() {
               placeholder="Введите нужную широту"
               keyboardType="numeric"
               onChangeText={(text) => {
-                setLat(text);
+                setLat(+text);
               }}
             />
           </View>
@@ -87,7 +100,18 @@ export default function App() {
               placeholder="Введите нужную долготу"
               keyboardType="numeric"
               onChangeText={(text) => {
-                setLon(text);
+                setLon(+text);
+              }}
+            />
+          </View>
+          <View style={styles.inputContainer}>
+            <Text style={styles.text}>Радиус</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Введите нужный радиус"
+              keyboardType="numeric"
+              onChangeText={(text) => {
+                setRad(+text);
               }}
             />
           </View>
@@ -107,7 +131,6 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   inputContainer: {
-    //   flex: 1,
     alignItems: "center",
     justifyContent: "space-between",
     flexDirection: "row",
@@ -119,7 +142,6 @@ const styles = StyleSheet.create({
     borderColor: "gray",
     borderWidth: 1,
     width: 0.3 * Dimensions.get("window").height,
-    // marginBottom:10
   },
   header: {
     fontSize: 36,

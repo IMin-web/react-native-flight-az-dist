@@ -1,8 +1,29 @@
 
-  export default function locate(lat1, lon1) { //Запрос данных с FlightRadar24
-    // const url = `http://data-live.flightradar24.com/zones/fcgi/feed.js?bounds=${lat1+6.6},${lon1-6.7},${lat1-6.8},${lon1+6.5}&adsb=1&air=1&array=1` //63.9,58.4,57.5,68.7
-    const url = `http://data-live.flightradar24.com/zones/fcgi/feed.js?bounds=${lat1+2.6},${lon1-4.7},${lat1-3.8},${lon1+5.5}&adsb=1&air=1&array=1` //63.9,58.4,57.5,68.7
-    // const url = `http://data-live.flightradar24.com/zones/fcgi/feed.js?bounds=63.9,58.4,57.5,68.7&adsb=1&air=1&array=1` //63.9,58.4,57.5,68.7
+  export default function locate(lat, lon, latPred, lonPred) { //Запрос данных с FlightRadar24
+    function one(){if(+lat+lonPred >= 90){
+      return 90
+    }      else{
+      return +lat+lonPred;
+    }}
+    function two(){if(+lon-latPred <= -180){
+      return -180
+    }      else{
+      return +lon-latPred;
+    }}
+    function three(){if(+lat-lonPred <= -90){
+      return -90
+    }      else{
+      return +lat-lonPred;
+    }
+  }
+    function four(){if(+lon+latPred >= 180){
+      return 180
+    }
+      else{
+        return +lon+latPred;
+      }
+    }
+    const url = `http://data-live.flightradar24.com/zones/fcgi/feed.js?bounds=${one()},${two()},${three()},${four()}&adsb=1&air=1&array=1`
       return fetch(url, {
       redirect: 'follow',
       referrer: 'no-referrer',

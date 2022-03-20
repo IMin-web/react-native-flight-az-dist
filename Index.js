@@ -21,18 +21,21 @@ export default function Index() {
     const dispatch = useDispatch();
     const locBase = useSelector(selectData);
     const [errorMsg, setErrorMsg] = useState(null);
-    useEffect(() => {
-      dispatch(fetchCoords());
-    }, [dispatch]);
+
+    //extraReducer запроса и вывода координат
+    useEffect(() => {dispatch(fetchCoords())}, [dispatch]);
  
     useEffect(() => {
       let result;
-      locate(coordinate.lat, coordinate.lon)
+      //запрос данных с FlightRadar24 по введенным координатам
+      locate(coordinate.lat, coordinate.lon, coordinate.latPred, coordinate.lonPred) 
         .then((res) => (result = res))
-        .then((res) => result.map((item) => item.push(Dalnost(item, coordinate.lat, coordinate.lon))))
-        .then((res) => result.map((item) => item.push(Azimut(item, coordinate.lat, coordinate.lon))))
+        //добавление в массив результатов дальности до самолета
+        .then((res) => result.map((item) => {item.push(Dalnost(item, coordinate.lat, coordinate.lon)); item.push(Azimut(item, coordinate.lat, coordinate.lon))})) 
+        //добавление в массив результатов азимута самолета
         .then((res) => dispatch(set(result)));
-    },locBase[0]);
+    });
+
     return(
         <NavigationContainer>
         <Tab.Navigator

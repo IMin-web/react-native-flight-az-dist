@@ -1,3 +1,5 @@
+   //формула расчета дальности до самолета относительно введенных координат
+
 export default function Dalnost(item, lat1, lon1) {
     let lat2 = item[2];
     let lon2 = item[3];

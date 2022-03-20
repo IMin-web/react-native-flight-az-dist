@@ -1,3 +1,5 @@
+   //формула расчета азимута самолета относительно введенных координат
+
    function toRadians(degrees) {
     return degrees * Math.PI / 180;
   };
