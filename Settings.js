@@ -25,9 +25,9 @@ export default function App() {
   const dispatch = useDispatch();
 
   function clickHandler() {
+    alert(`Профиль ${name} успешно создан!`)
     storeData(name, lat, lon, rad);
     getData().then((res) => {
-      console.log(res);
       dispatch(swap({ name: res[0], lat: res[1], lon: res[2], rad:res[3] }));
     });
   }
@@ -75,6 +75,7 @@ export default function App() {
           <View style={styles.inputContainer}>
             <Text style={styles.text}>Название</Text>
             <TextInput
+            // autoFocus={true}
               style={styles.input}
               placeholder="Введите название профиля"
               onChangeText={(text) => {

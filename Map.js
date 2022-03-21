@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useState, useRef, useEffect} from "react";
-import MapView, { Marker, Callout, Circle } from "react-native-maps";
+import MapView, { Marker, Callout, Circle, PROVIDER_GOOGLE } from "react-native-maps";
 import { StyleSheet, Pressable, Text, View, Dimensions, TextInput } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { selectCoordinate } from "./coordinateSlice";
@@ -15,7 +15,6 @@ export default function Map() {
   const coordinate = useSelector(selectCoordinate);
   const locBase = useSelector(selectData);
   const dispatch = useDispatch();
-  const [form, setForm] = useState(0); //состояние видимости формуляра самолета
   const [radius, setRadius] = useState(); //состояние видимости формуляра самолета
   const [radiusArray, setRadiusArray] = useState(0); //состояние текущих координат карты (изменяются при перемещении)
 
@@ -60,7 +59,7 @@ export default function Map() {
           longitudeDelta: 0.9721,
         }}
         style={styles.map}
-
+        provider={ PROVIDER_GOOGLE }
         mapType={"standard"}
       >
         <Marker
@@ -91,13 +90,9 @@ export default function Map() {
               <Marker
                 key={item[0]}
                 coordinate={{ latitude: item[2], longitude: item[3] }}
-                onPress={() => {
-                  form !== item[0] ? setForm(item[0]) : setForm(0);
-                }}
               >
                 {/* формуляр самолета */}
                 <Callout tooltip={true}>
-                  {form === item[0] ? (
                     <View style={styles.marker}>
                       <Text>{item[17] || "Без названия"}</Text>
                       <Text>Азимут: {Math.round(item[20])}</Text>
@@ -106,7 +101,6 @@ export default function Map() {
                       <Text>Скорость: {Math.round(item[6] * 1.87)}</Text>
                       <Text>Курс: {item[4]}</Text>
                     </View>
-                  ) : null}
                 </Callout>
               </Marker>
             ))
@@ -148,6 +142,14 @@ export default function Map() {
           >
             <Ionicons name={"locate"} size={30} color={"tomato"} />
           </Pressable>
+          <Pressable
+            style={styles.button}
+            onPress={() => {
+              console.log(window)
+            }}
+          >
+            <Ionicons name={"locate"} size={30} color={"tomato"} />
+          </Pressable>
         </View>
       </View>
       {coordinate.rad !==0 ? 
@@ -181,8 +183,9 @@ export default function Map() {
 
 const styles = StyleSheet.create({
   marker: {
-    position: "absolute",
-    width: 160,
+    // position: "absolute",
+    // width: 160,
+    // height:100,
     backgroundColor: "#fff",
   },
   container: {

@@ -1,4 +1,5 @@
 import React, {useEffect, useState } from "react";
+import {Alert} from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import TableComponent from "./Table";
 import Map from "./Map";
@@ -33,7 +34,19 @@ export default function Index() {
         //добавление в массив результатов дальности до самолета
         .then((res) => result.map((item) => {item.push(Dalnost(item, coordinate.lat, coordinate.lon)); item.push(Azimut(item, coordinate.lat, coordinate.lon))})) 
         //добавление в массив результатов азимута самолета
-        .then((res) => dispatch(set(result)));
+        .then((res) => dispatch(set(result)))
+        .catch(()=>{Alert.alert(
+          "Alert Title",
+          "My Alert Msg",
+          [
+            {
+              text: "Cancel",
+              onPress: () => console.log("Cancel Pressed"),
+              style: "cancel"
+            },
+            { text: "OK", onPress: () => console.log("OK Pressed") }
+          ]
+        );})
     });
 
     return(

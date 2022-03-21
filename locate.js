@@ -1,4 +1,6 @@
 
+  import {Alert} from 'react-native'
+
   export default function locate(lat, lon, latPred, lonPred) { //Запрос данных с FlightRadar24
     function one(){if(+lat+lonPred >= 90){
       return 90
@@ -31,4 +33,16 @@
     })
       .then(res => res.json())
       .then(res =>{return res.aircraft})
+      .catch(()=>{Alert.alert(
+      "Alert Title",
+      "My Alert Msg",
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel"
+        },
+        { text: "OK", onPress: () => console.log("OK Pressed") }
+      ]
+    );})
     }
