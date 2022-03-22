@@ -1,5 +1,5 @@
 import React, {useEffect, useState } from "react";
-import {Alert} from "react-native";
+import {Alert, DevSettings} from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import TableComponent from "./Table";
 import Map from "./Map";
@@ -36,15 +36,14 @@ export default function Index() {
         //добавление в массив результатов азимута самолета
         .then((res) => dispatch(set(result)))
         .catch(()=>{Alert.alert(
-          "Alert Title",
-          "My Alert Msg",
+          "Ошибка!",
+          "Проверьте подключение к интернету и перезагрузите приложение.",
           [
             {
-              text: "Cancel",
-              onPress: () => console.log("Cancel Pressed"),
+              text: "Отмена",
               style: "cancel"
             },
-            { text: "OK", onPress: () => console.log("OK Pressed") }
+            { text: "Перезагрузка", onPress : () => DevSettings.reload() }
           ]
         );})
     });

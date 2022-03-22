@@ -1,7 +1,19 @@
 import * as React from "react";
-import { useState, useRef, useEffect} from "react";
-import MapView, { Marker, Callout, Circle, PROVIDER_GOOGLE } from "react-native-maps";
-import { StyleSheet, Pressable, Text, View, Dimensions, TextInput } from "react-native";
+import { useState, useRef, useEffect } from "react";
+import MapView, {
+  Marker,
+  Callout,
+  Circle,
+  Animated,
+} from "react-native-maps";
+import {
+  StyleSheet,
+  Pressable,
+  Text,
+  View,
+  Dimensions,
+  Image,
+} from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { selectCoordinate } from "./coordinateSlice";
 import { selectData } from "./dataSlice";
@@ -17,11 +29,14 @@ export default function Map() {
   const dispatch = useDispatch();
   const [radius, setRadius] = useState(); //состояние видимости формуляра самолета
   const [radiusArray, setRadiusArray] = useState(0); //состояние текущих координат карты (изменяются при перемещении)
+  const [mapType, setMapType] = useState('standard'); //состояние текущих координат карты (изменяются при перемещении)
+  const [mapTypePress, setMapTypePress] = useState(false); //состояние текущих координат карты (изменяются при перемещении)
 
-  let granica1 = +coordinate.lat + coordinate.lonPred;
-  let granica2 = +coordinate.lon - coordinate.latPred;
-  let granica3 = +coordinate.lat - coordinate.lonPred;
-  let granica4 = +coordinate.lon + coordinate.latPred;
+  // let granica1 = +coordinate.lat + coordinate.lonPred;
+  // let granica2 = +coordinate.lon - coordinate.latPred;
+  // let granica3 = +coordinate.lat - coordinate.lonPred;
+  // let granica4 = +coordinate.lon + coordinate.latPred;
+  const mapTypeArray = ['standard', 'satellite', 'hybrid', 'terrain']
 
   const onLocationPress = async () => {
     try {
@@ -34,11 +49,11 @@ export default function Map() {
 
   useEffect(() => {
     let rad = [];
-            for (let i = 0; i < coordinate.rad; i += 10) {
-              rad.push(i + 10);
-            }
-            setRadiusArray(rad);
-  },[])
+    for (let i = 0; i < coordinate.rad; i += 10) {
+      rad.push(i + 10);
+    }
+    setRadiusArray(rad);
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -59,10 +74,11 @@ export default function Map() {
           longitudeDelta: 0.9721,
         }}
         style={styles.map}
-        provider={ PROVIDER_GOOGLE }
-        mapType={"standard"}
+        // provider={ PROVIDER_GOOGLE }
+        mapType={mapType}
+        // onMarkerPress={console.log('1')}
       >
-        <Marker
+        {/* <Marker
           pinColor="black"
           key={1}
           coordinate={{ latitude: granica1, longitude: granica2 }}
@@ -81,26 +97,85 @@ export default function Map() {
           pinColor="black"
           key={4}
           coordinate={{ latitude: granica3, longitude: granica4 }}
-        ><Callout tooltip={true}><Text>4</Text></Callout></Marker>
-        {radiusArray[0] ? radiusArray.map((item)=>{return <Circle key={item} center={{latitude: +coordinate.lat, longitude: +coordinate.lon}} radius={item*1000}/>}) : null}
-        {radiusArray[0] ? radiusArray.map((item)=>{if(+item%50==0){ return <Circle strokeWidth={2} key={item} center={{latitude: +coordinate.lat, longitude: +coordinate.lon}} radius={item*1000}/>}}) : null}
-        {radiusArray[0] ? radiusArray.map((item)=>{if(+item%100==0){ return <Circle strokeWidth={3} key={item} center={{latitude: +coordinate.lat, longitude: +coordinate.lon}} radius={item*1000}/>}}) : null}
+        ><Callout tooltip={true}><Text>4</Text></Callout></Marker> */}
+        {radiusArray[0]
+          ? radiusArray.map((item) => {
+              return (
+                <Circle
+                  key={item}
+                  center={{
+                    latitude: +coordinate.lat,
+                    longitude: +coordinate.lon,
+                  }}
+                  radius={item * 1000}
+                />
+              );
+            })
+          : null}
+        {radiusArray[0]
+          ? radiusArray.map((item) => {
+              if (+item % 50 == 0) {
+                return (
+                  <Circle
+                    strokeWidth={2}
+                    key={item}
+                    center={{
+                      latitude: +coordinate.lat,
+                      longitude: +coordinate.lon,
+                    }}
+                    radius={item * 1000}
+                  />
+                );
+              }
+            })
+          : null}
+        {radiusArray[0]
+          ? radiusArray.map((item) => {
+              if (+item % 100 == 0) {
+                return (
+                  <Circle
+                    strokeWidth={3}
+                    key={item}
+                    center={{
+                      latitude: +coordinate.lat,
+                      longitude: +coordinate.lon,
+                    }}
+                    radius={item * 1000}
+                  />
+                );
+              }
+            })
+          : null}
         {locBase.value[0] !== undefined
           ? locBase.value.map((item) => (
               <Marker
                 key={item[0]}
                 coordinate={{ latitude: item[2], longitude: item[3] }}
+                rotation={item[4]}
+                // onPress={() => setMarkerColor(item[0])}
               >
-                {/* формуляр самолета */}
+                <View>
+                  <Image
+                    source={require("./assets/airplane.png")}
+                    style={{
+                      width: 32,
+                      height: 32,
+                      transform: [{ rotateZ: `${item[4]}deg` }],
+                      tintColor: 'red',
+                    }}
+                    resizeMode="contain"
+                  />
+                  {/* формуляр самолета */}
+                </View>
                 <Callout tooltip={true}>
-                    <View style={styles.marker}>
-                      <Text>{item[17] || "Без названия"}</Text>
-                      <Text>Азимут: {Math.round(item[20])}</Text>
-                      <Text>Дальность: {Math.round(item[19] / 100) / 10}</Text>
-                      <Text>Высота: {Math.round(item[5] / 0.33) / 10}</Text>
-                      <Text>Скорость: {Math.round(item[6] * 1.87)}</Text>
-                      <Text>Курс: {item[4]}</Text>
-                    </View>
+                  <View style={styles.marker}>
+                    <Text>{item[17] || "Без названия"}</Text>
+                    <Text>Азимут: {Math.round(item[20])}</Text>
+                    <Text>Дальность: {Math.round(item[19] / 100) / 10}</Text>
+                    <Text>Высота: {Math.round(item[5] / 0.33) / 10}</Text>
+                    <Text>Скорость: {Math.round(item[6] * 1.87)}</Text>
+                    <Text>Курс: {item[4]}</Text>
+                  </View>
                 </Callout>
               </Marker>
             ))
@@ -112,7 +187,6 @@ export default function Map() {
           <Pressable
             style={styles.button}
             onPress={() => {
-              console.log(coordinate)
               onLocationPress()
                 .then((res) => {
                   storeData("Координаты с карты", +res[0], +res[1], 300);
@@ -145,36 +219,41 @@ export default function Map() {
           <Pressable
             style={styles.button}
             onPress={() => {
-              console.log(window)
+              mapTypePress ? setMapTypePress(false) : setMapTypePress(true)
             }}
           >
-            <Ionicons name={"locate"} size={30} color={"tomato"} />
+            <Ionicons name={"layers"} size={30} color={"tomato"} />
           </Pressable>
+          {mapTypePress ? 
+          mapTypeArray.map((item)=>{
+            return (
+              <Pressable key={item} onPress={()=>setMapType(item)}>
+            <View key={item} style={{width:50, height:50, backgroundColor:'red', marginBottom: 10}}></View>
+            </Pressable>)})
+          : null}
         </View>
       </View>
-      {coordinate.rad !==0 ? 
-      <View style={styles.slider}>
-        <Slider
-          value={radius ? radius : coordinate.rad}
-          onValueChange={(value) => {
-            let rad = [];
-            for (let i = 0; i < value; i += 10) {
-              rad.push(i + 10);
-            }
-            setRadiusArray(rad);
-            setRadius(value);
-          }}
-          onSlidingComplete={(value)=>{
-            dispatch(
-              swapRad({ rad: value[0]} )
-              )
-          }
-            }
-          maximumValue={500}
-          step={10}
-        />
-        <Text>Value: {radius ? radius : coordinate.rad}</Text>
-      </View> : null}
+      {coordinate.rad !== 0 ? (
+        <View style={styles.slider}>
+          <Slider
+            value={radius ? radius : coordinate.rad}
+            onValueChange={(value) => {
+              let rad = [];
+              for (let i = 0; i < value; i += 10) {
+                rad.push(i + 10);
+              }
+              setRadiusArray(rad);
+              setRadius(value);
+            }}
+            onSlidingComplete={(value) => {
+              dispatch(swapRad({ rad: value[0] }));
+            }}
+            maximumValue={500}
+            step={10}
+          />
+          <Text>Радиус поиска: {radius ? radius : coordinate.rad} км.</Text>
+        </View>
+      ) : null}
     </View>
   );
 }
@@ -183,9 +262,7 @@ export default function Map() {
 
 const styles = StyleSheet.create({
   marker: {
-    // position: "absolute",
-    // width: 160,
-    // height:100,
+    position: "absolute",
     backgroundColor: "#fff",
   },
   container: {
@@ -232,6 +309,6 @@ const styles = StyleSheet.create({
     width: 250,
   },
   input: {
-    backgroundColor: "gray"
-  }
+    backgroundColor: "gray",
+  },
 });
