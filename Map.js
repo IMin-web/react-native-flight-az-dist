@@ -13,6 +13,7 @@ import {
   View,
   Dimensions,
   Image,
+  Vibration
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { selectCoordinate } from "./coordinateSlice";
