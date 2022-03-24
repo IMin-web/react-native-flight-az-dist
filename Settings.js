@@ -7,12 +7,11 @@ import {
   ScrollView,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
-import { selectCoordinate } from "./coordinateSlice";
-import { selectData } from "./dataSlice";
-import { swap } from "./coordinateSlice";
-import { set } from "./dataSlice";
+import { selectCoordinate, swap } from "./store/coordinateSlice";
+import { selectData } from "./store/dataSlice";
+import { set } from "./store/dataSlice";
 import { Picker } from "@react-native-picker/picker";
-import {getData, storeData} from './dataFunction'
+import {getData, storeData} from './localStorage'
 import {settingsStyle} from "./styles";
 
 

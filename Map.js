@@ -1,24 +1,14 @@
-import * as React from "react";
-import { useState, useRef, useEffect } from "react";
-import MapView, {
-  Circle,
-} from "react-native-maps";
-import {
-  Pressable,
-  Text,
-  View,
-  Image,
-  Animated,
-} from "react-native";
+import React, { useState, useRef, useEffect } from "react";
+import MapView, { Circle } from "react-native-maps";
+import { Pressable, Text, View, Image, Animated } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
-import { selectCoordinate } from "./coordinateSlice";
-import { selectData } from "./dataSlice";
-import { swap, swapRad } from "./coordinateSlice";
-import { getData, storeData } from "./dataFunction";
+import { selectCoordinate, swap, swapRad } from "./store/coordinateSlice";
+import { selectData } from "./store/dataSlice";
+import { getData, storeData } from "./localStorage";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { Slider } from "@miblanchard/react-native-slider";
-import MarkerMap from "./MarkerMap"
-import {mapStyle} from "./styles";
+import MarkerMap from "./MarkerMap";
+import { mapStyle } from "./styles";
 
 export default function Map() {
   const map = useRef(null);
@@ -27,7 +17,7 @@ export default function Map() {
   const dispatch = useDispatch();
   const [radius, setRadius] = useState(); //состояние видимости формуляра самолета
   const [radiusArray, setRadiusArray] = useState(0); //состояние текущих координат карты (изменяются при перемещении)
-  const [mapType, setMapType] = useState('standard'); //состояние текущих координат карты (изменяются при перемещении)
+  const [mapType, setMapType] = useState("standard"); //состояние текущих координат карты (изменяются при перемещении)
 
   // let granica1 = +coordinate.lat + coordinate.lonPred;
   // let granica2 = +coordinate.lon - coordinate.latPred;
@@ -143,9 +133,7 @@ export default function Map() {
             })
           : null}
         {locBase.value[0] !== undefined
-          ? locBase.value.map((item) => (
-            <MarkerMap key={item[0]} data={item}/>
-            ))
+          ? locBase.value.map((item) => <MarkerMap key={item[0]} data={item} />)
           : null}
       </MapView>
       <View style={mapStyle.coordinate}>
@@ -166,7 +154,7 @@ export default function Map() {
                   });
                 })
                 .catch((err) => {
-                  Alert.error(err)
+                  Alert.error(err);
                 });
             }}
           >
@@ -187,23 +175,30 @@ export default function Map() {
             <Ionicons name={"locate"} size={30} color={"black"} />
           </Pressable>
           <Pressable
-            style={{    elevation: 3,
+            style={{
+              elevation: 3,
               backgroundColor: "#C5D6FA",
               paddingHorizontal: 2.5,
               paddingVertical: 2.5,
-              borderRadius:4}}
+              borderRadius: 4,
+            }}
             onPress={() => {
-              mapType==='standard' ? setMapType('satellite') : setMapType('standard')
+              mapType === "standard"
+                ? setMapType("satellite")
+                : setMapType("standard");
             }}
           >
-            {mapType==='standard' ? 
-            <Image
-                    source={require(`./assets/standard.png`)}
-                    style={mapStyle.mapMenu}
-                  /> : <Image
-                  source={require(`./assets/satellite.png`)}
-                  style={mapStyle.mapMenu}
-                /> }
+            {mapType === "standard" ? (
+              <Image
+                source={require(`./assets/standard.png`)}
+                style={mapStyle.mapMenu}
+              />
+            ) : (
+              <Image
+                source={require(`./assets/satellite.png`)}
+                style={mapStyle.mapMenu}
+              />
+            )}
           </Pressable>
         </View>
       </View>
@@ -225,10 +220,19 @@ export default function Map() {
             maximumValue={500}
             step={10}
           />
-          <Text style={{backgroundColor: "#C5D6FA", textAlign: "center", paddingBottom:5, paddingTop:5, fontSize:16}}>Радиус поиска: {radius ? radius : coordinate.rad} км.</Text>
+          <Text
+            style={{
+              backgroundColor: "#C5D6FA",
+              textAlign: "center",
+              paddingBottom: 5,
+              paddingTop: 5,
+              fontSize: 16,
+            }}
+          >
+            Радиус поиска: {radius ? radius : coordinate.rad} км.
+          </Text>
         </View>
       ) : null}
     </View>
   );
 }
-

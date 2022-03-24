@@ -2,7 +2,7 @@ import { View, Text, ScrollView } from "react-native";
 import React from "react";
 import { Table, Row } from "react-native-table-component";
 import { useSelector } from "react-redux";
-import { selectData } from "./dataSlice";
+import { selectData } from "./store/dataSlice";
 import { tableStyle } from "./styles";
 
 

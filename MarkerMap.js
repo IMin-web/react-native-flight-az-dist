@@ -2,7 +2,6 @@ import { Marker, Callout } from "react-native-maps";
 import { Text, View, Image } from "react-native";
 import {markerStyle} from "./styles";
 
-
 export default function MarkerMap(props) {
   const item = props.data;
   return (

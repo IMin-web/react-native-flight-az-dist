@@ -10,9 +10,8 @@ import locate from "./locate";
 import Dalnost from "./Dalnost";
 import Azimut from "./Azimut";
 import { useSelector, useDispatch } from "react-redux";
-import { selectCoordinate } from "./coordinateSlice";
-import { set } from "./dataSlice"
-import {fetchCoords} from './coordinateSlice'
+import { selectCoordinate, fetchCoords } from "./store/coordinateSlice";
+import { set } from "./store/dataSlice"
 
 export default function Index() {
     const Tab = createBottomTabNavigator();

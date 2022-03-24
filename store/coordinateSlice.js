@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getData } from "./dataFunction";
+import { getData } from "../localStorage";
 
 export async function coords() {
   const data = await getData();
