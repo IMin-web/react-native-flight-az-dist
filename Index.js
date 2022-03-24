@@ -1,4 +1,4 @@
-import React, {useEffect, useState } from "react";
+import React, {useEffect} from "react";
 import {Alert, DevSettings} from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import TableComponent from "./Table";
@@ -12,16 +12,12 @@ import Azimut from "./Azimut";
 import { useSelector, useDispatch } from "react-redux";
 import { selectCoordinate } from "./coordinateSlice";
 import { set } from "./dataSlice"
-import { selectData } from "./dataSlice";
-import * as Location from 'expo-location';
 import {fetchCoords} from './coordinateSlice'
 
 export default function Index() {
     const Tab = createBottomTabNavigator();
     const coordinate = useSelector(selectCoordinate); 
     const dispatch = useDispatch();
-    const locBase = useSelector(selectData);
-    const [errorMsg, setErrorMsg] = useState(null);
 
     //extraReducer запроса и вывода координат
     useEffect(() => {dispatch(fetchCoords())}, [dispatch]);

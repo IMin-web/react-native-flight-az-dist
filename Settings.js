@@ -3,9 +3,7 @@ import {
   Pressable,
   Text,
   View,
-  StyleSheet,
   TextInput,
-  Dimensions,
   ScrollView,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
@@ -15,6 +13,8 @@ import { swap } from "./coordinateSlice";
 import { set } from "./dataSlice";
 import { Picker } from "@react-native-picker/picker";
 import {getData, storeData} from './dataFunction'
+import {settingsStyle} from "./styles";
+
 
 export default function App() {
   const [name, setName] = useState("");
@@ -34,31 +34,31 @@ export default function App() {
 
   return (
     <ScrollView>
-      <View style={styles.container}>
-        <Text style={styles.header}>Текущий профиль</Text>
-        <View style={styles.inputContainer}>
-            <Text style={styles.text}>Название</Text>
-        <Text style={styles.text}>{coordinate.name}</Text>
+      <View style={settingsStyle.container}>
+        <Text style={settingsStyle.header}>Текущий профиль</Text>
+        <View style={settingsStyle.inputContainer}>
+            <Text style={settingsStyle.text}>Название</Text>
+        <Text style={settingsStyle.text}>{coordinate.name}</Text>
         </View>
-        <View style={styles.inputContainer}>
-            <Text style={styles.text}>Широта</Text>
-        <Text style={styles.text}>{coordinate.lat}</Text>
+        <View style={settingsStyle.inputContainer}>
+            <Text style={settingsStyle.text}>Широта</Text>
+        <Text style={settingsStyle.text}>{coordinate.lat}</Text>
         </View>
-        <View style={styles.inputContainer}>
-            <Text style={styles.text}>Долгота</Text>
-        <Text style={styles.text}>{coordinate.lon}</Text>
+        <View style={settingsStyle.inputContainer}>
+            <Text style={settingsStyle.text}>Долгота</Text>
+        <Text style={settingsStyle.text}>{coordinate.lon}</Text>
         </View>
-        <View style={styles.inputContainer}>
-            <Text style={styles.text}>Радиус</Text>
-        <Text style={styles.text}>{coordinate.rad}</Text>
+        <View style={settingsStyle.inputContainer}>
+            <Text style={settingsStyle.text}>Радиус</Text>
+        <Text style={settingsStyle.text}>{coordinate.rad}</Text>
         </View>
-        <View style={styles.inputContainer}>
-            <Text style={styles.text}>Предел широты</Text>
-        <Text style={styles.text}>{coordinate.latPred}</Text>
+        <View style={settingsStyle.inputContainer}>
+            <Text style={settingsStyle.text}>Предел широты</Text>
+        <Text style={settingsStyle.text}>{coordinate.latPred}</Text>
         </View>
-        <View style={styles.inputContainer}>
-            <Text style={styles.text}>Предел долготы</Text>
-        <Text style={styles.text}>{coordinate.lonPred}</Text>
+        <View style={settingsStyle.inputContainer}>
+            <Text style={settingsStyle.text}>Предел долготы</Text>
+        <Text style={settingsStyle.text}>{coordinate.lonPred}</Text>
         </View>
         {/* <Picker 
   selectedValue={selectedProfile}
@@ -69,24 +69,24 @@ export default function App() {
   <Picker.Item label="JavaScript" value="js" />
 </Picker> */}
       </View>
-      <View style={styles.container}>
-        <Text style={styles.header}>Создание профиля с координатами</Text>
+      <View style={settingsStyle.container}>
+        <Text style={settingsStyle.header}>Создание профиля с координатами</Text>
         <View style={{ flexDirection: "column" }}>
-          <View style={styles.inputContainer}>
-            <Text style={styles.text}>Название</Text>
+          <View style={settingsStyle.inputContainer}>
+            <Text style={settingsStyle.text}>Название</Text>
             <TextInput
             // autoFocus={true}
-              style={styles.input}
+              style={settingsStyle.input}
               placeholder="Введите название профиля"
               onChangeText={(text) => {
                 setName(text);
               }}
             />
           </View>
-          <View style={styles.inputContainer}>
-            <Text style={styles.text}>Широта</Text>
+          <View style={settingsStyle.inputContainer}>
+            <Text style={settingsStyle.text}>Широта</Text>
             <TextInput
-              style={styles.input}
+              style={settingsStyle.input}
               placeholder="Введите нужную широту"
               keyboardType="numeric"
               onChangeText={(text) => {
@@ -94,10 +94,10 @@ export default function App() {
               }}
             />
           </View>
-          <View style={styles.inputContainer}>
-            <Text style={styles.text}>Долгота</Text>
+          <View style={settingsStyle.inputContainer}>
+            <Text style={settingsStyle.text}>Долгота</Text>
             <TextInput
-              style={styles.input}
+              style={settingsStyle.input}
               placeholder="Введите нужную долготу"
               keyboardType="numeric"
               onChangeText={(text) => {
@@ -105,10 +105,10 @@ export default function App() {
               }}
             />
           </View>
-          <View style={styles.inputContainer}>
-            <Text style={styles.text}>Радиус</Text>
+          <View style={settingsStyle.inputContainer}>
+            <Text style={settingsStyle.text}>Радиус</Text>
             <TextInput
-              style={styles.input}
+              style={settingsStyle.input}
               placeholder="Введите нужный радиус"
               keyboardType="numeric"
               onChangeText={(text) => {
@@ -117,63 +117,10 @@ export default function App() {
             />
           </View>
         </View>
-        <Pressable style={styles.button} onPress={() => clickHandler()}>
-          <Text style={styles.textButton}>Ввод</Text>
+        <Pressable style={settingsStyle.button} onPress={() => clickHandler()}>
+          <Text style={settingsStyle.textButton}>Ввод</Text>
         </Pressable>
       </View>
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    borderWidth: 2,
-    borderColor: "gray",
-    marginBottom: 40,
-  },
-  inputContainer: {
-    alignItems: "center",
-    justifyContent: "space-between",
-    flexDirection: "row",
-    paddingLeft: 10,
-    paddingRight: 10,
-  },
-  input: {
-    height: 40,
-    borderColor: "gray",
-    borderWidth: 1,
-    width: 0.3 * Dimensions.get("window").height,
-  },
-  header: {
-    fontSize: 36,
-    paddingBottom: 10,
-    paddingTop: 10,
-    paddingLeft: 10,
-  },
-  button: {
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-    borderRadius: 4,
-    elevation: 3,
-    backgroundColor: "gray",
-    marginTop: 20,
-  },
-  text: {
-    textAlign: "center",
-    justifyContent: "space-around",
-    paddingTop: 10,
-    paddingBottom: 10,
-    // backgroundColor: "tomato",
-    fontSize: 24,
-  },
-  textButton: {
-    textAlign: "center",
-    paddingTop: 10,
-    paddingBottom: 10,
-    // backgroundColor: "tomato",
-    fontSize: 24,
-    color: "white",
-  },
-});

@@ -1,6 +1,3 @@
-
-  import {Alert, DevSettings} from 'react-native'
-
   export default function locate(lat, lon, latPred, lonPred) { //Запрос данных с FlightRadar24
     function one(){if(+lat+lonPred >= 90){
       return 90

@@ -1,19 +1,14 @@
 import * as React from "react";
 import { useState, useRef, useEffect } from "react";
 import MapView, {
-  Marker,
-  Callout,
   Circle,
-  Animated,
 } from "react-native-maps";
 import {
-  StyleSheet,
   Pressable,
   Text,
   View,
-  Dimensions,
   Image,
-  Vibration
+  Animated,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { selectCoordinate } from "./coordinateSlice";
@@ -22,6 +17,8 @@ import { swap, swapRad } from "./coordinateSlice";
 import { getData, storeData } from "./dataFunction";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { Slider } from "@miblanchard/react-native-slider";
+import MarkerMap from "./MarkerMap"
+import {mapStyle} from "./styles";
 
 export default function Map() {
   const map = useRef(null);
@@ -31,13 +28,12 @@ export default function Map() {
   const [radius, setRadius] = useState(); //состояние видимости формуляра самолета
   const [radiusArray, setRadiusArray] = useState(0); //состояние текущих координат карты (изменяются при перемещении)
   const [mapType, setMapType] = useState('standard'); //состояние текущих координат карты (изменяются при перемещении)
-  const [mapTypePress, setMapTypePress] = useState(false); //состояние текущих координат карты (изменяются при перемещении)
 
   // let granica1 = +coordinate.lat + coordinate.lonPred;
   // let granica2 = +coordinate.lon - coordinate.latPred;
   // let granica3 = +coordinate.lat - coordinate.lonPred;
   // let granica4 = +coordinate.lon + coordinate.latPred;
-  const mapTypeArray = ['standard', 'satellite', 'hybrid', 'terrain']
+  // const mapTypeArray = ['standard', 'satellite', 'hybrid', 'terrain']
 
   const onLocationPress = async () => {
     try {
@@ -57,7 +53,7 @@ export default function Map() {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <View style={mapStyle.container}>
       <MapView
         ref={(current) => (map.current = current)}
         onLayout={() => {
@@ -74,10 +70,9 @@ export default function Map() {
           latitudeDelta: 1.2722,
           longitudeDelta: 0.9721,
         }}
-        style={styles.map}
+        style={mapStyle.map}
         // provider={ PROVIDER_GOOGLE }
         mapType={mapType}
-        // onMarkerPress={console.log('1')}
       >
         {/* <Marker
           pinColor="black"
@@ -149,44 +144,15 @@ export default function Map() {
           : null}
         {locBase.value[0] !== undefined
           ? locBase.value.map((item) => (
-              <Marker
-                key={item[0]}
-                coordinate={{ latitude: item[2], longitude: item[3] }}
-                rotation={item[4]}
-                // onPress={() => setMarkerColor(item[0])}
-              >
-                <View>
-                  <Image
-                    source={require("./assets/airplane.png")}
-                    style={{
-                      width: 32,
-                      height: 32,
-                      transform: [{ rotateZ: `${item[4]}deg` }],
-                      tintColor: 'red',
-                    }}
-                    resizeMode="contain"
-                  />
-                  {/* формуляр самолета */}
-                </View>
-                <Callout tooltip={true}>
-                  <View style={styles.marker}>
-                    <Text>{item[17] || "Без названия"}</Text>
-                    <Text>Азимут: {Math.round(item[20])}</Text>
-                    <Text>Дальность: {Math.round(item[19] / 100) / 10}</Text>
-                    <Text>Высота: {Math.round(item[5] / 0.33) / 10}</Text>
-                    <Text>Скорость: {Math.round(item[6] * 1.87)}</Text>
-                    <Text>Курс: {item[4]}</Text>
-                  </View>
-                </Callout>
-              </Marker>
+            <MarkerMap key={item[0]} data={item}/>
             ))
           : null}
       </MapView>
-      <View style={styles.coordinate}>
+      <View style={mapStyle.coordinate}>
         <View>
           {/* кнопка поиска в секторе */}
           <Pressable
-            style={styles.button}
+            style={mapStyle.button}
             onPress={() => {
               onLocationPress()
                 .then((res) => {
@@ -198,14 +164,17 @@ export default function Map() {
                       swap({ lat: result[1], lon: result[2], rad: result[3] })
                     );
                   });
+                })
+                .catch((err) => {
+                  Alert.error(err)
                 });
             }}
           >
-            <Ionicons name={"search"} size={30} color={"tomato"} />
+            <Ionicons name={"search"} size={30} color={"black"} />
           </Pressable>
           {/* кнопка переноса камеры в введенные координаты */}
           <Pressable
-            style={styles.button}
+            style={mapStyle.button}
             onPress={() => {
               map.current.animateCamera({
                 center: {
@@ -215,27 +184,31 @@ export default function Map() {
               });
             }}
           >
-            <Ionicons name={"locate"} size={30} color={"tomato"} />
+            <Ionicons name={"locate"} size={30} color={"black"} />
           </Pressable>
           <Pressable
-            style={styles.button}
+            style={{    elevation: 3,
+              backgroundColor: "#C5D6FA",
+              paddingHorizontal: 2.5,
+              paddingVertical: 2.5,
+              borderRadius:4}}
             onPress={() => {
-              mapTypePress ? setMapTypePress(false) : setMapTypePress(true)
+              mapType==='standard' ? setMapType('satellite') : setMapType('standard')
             }}
           >
-            <Ionicons name={"layers"} size={30} color={"tomato"} />
+            {mapType==='standard' ? 
+            <Image
+                    source={require(`./assets/standard.png`)}
+                    style={mapStyle.mapMenu}
+                  /> : <Image
+                  source={require(`./assets/satellite.png`)}
+                  style={mapStyle.mapMenu}
+                /> }
           </Pressable>
-          {mapTypePress ? 
-          mapTypeArray.map((item)=>{
-            return (
-              <Pressable key={item} onPress={()=>setMapType(item)}>
-            <View key={item} style={{width:50, height:50, backgroundColor:'red', marginBottom: 10}}></View>
-            </Pressable>)})
-          : null}
         </View>
       </View>
       {coordinate.rad !== 0 ? (
-        <View style={styles.slider}>
+        <View style={mapStyle.slider}>
           <Slider
             value={radius ? radius : coordinate.rad}
             onValueChange={(value) => {
@@ -252,64 +225,10 @@ export default function Map() {
             maximumValue={500}
             step={10}
           />
-          <Text>Радиус поиска: {radius ? radius : coordinate.rad} км.</Text>
+          <Text style={{backgroundColor: "#C5D6FA", textAlign: "center", paddingBottom:5, paddingTop:5, fontSize:16}}>Радиус поиска: {radius ? radius : coordinate.rad} км.</Text>
         </View>
       ) : null}
     </View>
   );
 }
 
-//стили
-
-const styles = StyleSheet.create({
-  marker: {
-    position: "absolute",
-    backgroundColor: "#fff",
-  },
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  map: {
-    width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height,
-  },
-  coordinate: {
-    justifyContent: "center",
-    alignItems: "center",
-    position: "absolute",
-    top: 10,
-    right: 10,
-  },
-  button: {
-    paddingVertical: 10,
-    paddingHorizontal: 10,
-    borderRadius: 4,
-    elevation: 3,
-    backgroundColor: "gray",
-    marginBottom: 5,
-  },
-  text: {
-    fontSize: 16,
-    lineHeight: 21,
-    fontWeight: "bold",
-    letterSpacing: 0.25,
-    color: "white",
-  },
-  slider: {
-    flex: 1,
-    marginLeft: 10,
-    marginRight: 10,
-    alignItems: "stretch",
-    justifyContent: "center",
-    position: "absolute",
-    bottom: 0,
-    right: 50,
-    width: 250,
-  },
-  input: {
-    backgroundColor: "gray",
-  },
-});
