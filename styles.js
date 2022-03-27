@@ -23,7 +23,7 @@ export const mapStyle = StyleSheet.create({
     paddingHorizontal: 10,
     borderRadius: 4,
     elevation: 3,
-    backgroundColor: "#C5D6FA",
+    backgroundColor: "#2196F3",
     marginBottom: 5,
   },
   slider: {
@@ -45,7 +45,7 @@ export const mapStyle = StyleSheet.create({
 
 export const tableStyle = StyleSheet.create({
   tableName: {
-    color: "tomato",
+    color: "#2196F3",
     textAlign: "center",
     fontWeight: "bold",
     fontSize: 24,
@@ -57,10 +57,17 @@ export const tableStyle = StyleSheet.create({
 });
 
 export const settingsStyle = StyleSheet.create({
+  navButton: {
+    alignItems: 'center', paddingBottom:10, paddingTop:10,
+  },
   container: {
     borderWidth: 2,
     borderColor: "gray",
-    marginBottom: 40,
+  },
+  separator: {
+    marginTop: 8,
+    borderBottomColor: '#737373',
+    borderBottomWidth: StyleSheet.hairlineWidth,
   },
   inputContainer: {
     alignItems: "center",
@@ -88,7 +95,7 @@ export const settingsStyle = StyleSheet.create({
     paddingHorizontal: 32,
     borderRadius: 4,
     elevation: 3,
-    backgroundColor: "gray",
+    backgroundColor: "#2196F3",
     marginTop: 20,
   },
   text: {
