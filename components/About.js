@@ -1,6 +1,8 @@
 import React from 'react';
 import { StyleSheet, View, SafeAreaView, Text, Alert, Pressable } from 'react-native';
 import Ionicons from "react-native-vector-icons/Ionicons";
+import * as WebBrowser from 'expo-web-browser';
+
 
 const Separator = () => (
   <View style={styles.separator} />
@@ -20,7 +22,7 @@ const App = () => (
             </Text>
       <View style={styles.fixToText}>
         <Pressable
-          onPress={() => Alert.alert('Left button pressed')}
+          onPress={() => WebBrowser.openBrowserAsync('https://github.com/IMin-web/react-native-flight-az-dist')}
         >
                 <Ionicons  name={"logo-github"} size={50} color={"black"} />
 </Pressable>

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Alert, DevSettings, Button, View, Text } from "react-native";
+import { Alert, DevSettings} from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import {
   createBottomTabNavigator
@@ -18,9 +18,8 @@ import Dalnost from "./Dalnost";
 import Azimut from "./Azimut";
 import { getMultiple } from "./localStorage";
 
-export default function Index({ navigation }) {
+export default function Index() {
   const Tab = createBottomTabNavigator();
-  const Stack = createNativeStackNavigator();
   const coordinate = useSelector(selectCoordinate);
   const dispatch = useDispatch();
   const locBase = useSelector(selectData);

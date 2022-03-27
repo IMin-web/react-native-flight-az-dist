@@ -56,13 +56,14 @@ export default function Map({ navigation }) {
     }
   };
 
-  useEffect(() => {
-    let rad = [];
-    for (let i = 0; i < coordinate.rad; i += 10) {
-      rad.push(i + 10);
-    }
-    setRadiusArray(rad);
-  }, []);
+  // function distantion(){
+  //   let rad = [];
+  //   for (let i = 0; i < coordinate.rad; i += 10) {
+  //     rad.push(i + 10);
+  //   }
+  //   return rad;
+  // };
+  // useEffect(()=>{setRadiusArray(distantion())},[]) 
 
   return (
     <View style={mapStyle.container}>
@@ -85,6 +86,12 @@ export default function Map({ navigation }) {
         style={mapStyle.map}
         // provider={ PROVIDER_GOOGLE }
         mapType={mapType}
+        onMapReady={()=>{
+          let rad = [];
+          for (let i = 0; i < coordinate.rad; i += 10) {
+            rad.push(i + 10);
+          }
+          setRadiusArray(rad);}}
       >
         <Marker
           pinColor="black"
@@ -97,16 +104,6 @@ export default function Map({ navigation }) {
             </Text>
           </Callout>
         </Marker>
-        {/* <Marker
-          pinColor="black"
-          key={2}
-          coordinate={{ latitude: granica1, longitude: granica4 }}
-        />
-        <Marker
-          pinColor="black"
-          key={3}
-          coordinate={{ latitude: granica3, longitude: granica2 }}
-        /> */}
         <Marker
           pinColor="black"
           key={4}
