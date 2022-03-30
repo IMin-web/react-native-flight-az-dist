@@ -44,7 +44,10 @@ export default function Index() {
       coordinate.latPred,
       coordinate.lonPred
     )
-      .then((res) => (result = res))
+      .then((res) => {if(res[0]){
+        result = res}
+      else{
+        error}})
       //добавление в массив результатов дальности до самолета
       .then((res) =>
         result.map((item) => {
@@ -55,17 +58,7 @@ export default function Index() {
       //добавление в массив результатов азимута самолета
       .then((res) => dispatch(set(result)))
       .catch(() => {
-        Alert.alert(
-          "Ошибка!",
-          "Проверьте подключение к интернету и перезагрузите приложение.",
-          [
-            {
-              text: "Отмена",
-              style: "cancel",
-            },
-            { text: "Перезагрузка", onPress: () => DevSettings.reload() },
-          ]
-        );
+        dispatch(set(0))
       });
   }, locBase[0]);
 

@@ -1,3 +1,5 @@
+import { Alert, DevSettings} from "react-native";
+
   export default function locate(lat, lon, latPred, lonPred) { //Запрос данных с FlightRadar24
     function one(){if(+lat+lonPred >= 90){
       return 90
@@ -31,4 +33,16 @@
     })
       .then(res => res.json())
       .then(res =>{return res.aircraft})
+      .catch(err => 
+        Alert.alert(
+          "Ошибка!",
+          "Проверьте подключение к интернету и перезагрузите приложение.",
+          [
+            {
+              text: "Отмена",
+              style: "cancel",
+            },
+            { text: "Перезагрузка", onPress: () => DevSettings.reload() },
+          ]
+        ))
     }
