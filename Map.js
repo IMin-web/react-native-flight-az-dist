@@ -56,15 +56,6 @@ export default function Map({ navigation }) {
     }
   };
 
-  // function distantion(){
-  //   let rad = [];
-  //   for (let i = 0; i < coordinate.rad; i += 10) {
-  //     rad.push(i + 10);
-  //   }
-  //   return rad;
-  // };
-  // useEffect(()=>{setRadiusArray(distantion())},[]) 
-
   return (
     <View style={mapStyle.container}>
       <MapView
@@ -93,7 +84,7 @@ export default function Map({ navigation }) {
           }
           setRadiusArray(rad);}}
       >
-        <Marker
+        {/* <Marker
           pinColor="black"
           key={1}
           coordinate={{ latitude: granica1, longitude: granica2 }}
@@ -103,7 +94,7 @@ export default function Map({ navigation }) {
               {granica1},{granica2}
             </Text>
           </Callout>
-        </Marker>
+        </Marker> 
         <Marker
           pinColor="black"
           key={4}
@@ -114,7 +105,7 @@ export default function Map({ navigation }) {
               {granica3},{granica4}
             </Text>
           </Callout>
-        </Marker>
+        </Marker>*/}
         {radiusArray[0]
           ? radiusArray.map((item) => {
               return (
