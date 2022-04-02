@@ -118,5 +118,6 @@ export const markerStyle = StyleSheet.create({
   marker: {
     position: "absolute",
     backgroundColor: "#fff",
+    width: 120,
   },
 });
