@@ -59,8 +59,8 @@ export default function Index() {
       //добавление в массив результатов азимута самолета
       .then((res) => dispatch(set(result)))
       .then((res)=>
-      timerId = setTimeout(work, 2000))
-    })}, 2000)
+      timerId = setTimeout(work, 1000))
+    })}, 1000)
   }, 
 [coordinate]);
 
