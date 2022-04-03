@@ -5,7 +5,6 @@ import store from './store/store'
 import Index from "./Index"
 
 export default function App() {
-
   return (
     <View style={{flex: 1,
       backgroundColor: "#fff"}}>

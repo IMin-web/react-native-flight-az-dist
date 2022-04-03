@@ -22,7 +22,7 @@ export default function Map({ navigation }) {
   const coordinate = useSelector(selectCoordinate);
   const locBase = useSelector(selectData);
   const dispatch = useDispatch();
-  const [radius, setRadius] = useState(); //состояние видимости формуляра самолета
+  const [radius, setRadius] = useState(300); //состояние видимости формуляра самолета
   const [radiusArray, setRadiusArray] = useState(0); //состояние текущих координат карты (изменяются при перемещении)
   const [mapType, setMapType] = useState("standard"); //состояние текущих координат карты (изменяются при перемещении)
   const [modalVisible, setModalVisible] = useState(false);
@@ -166,7 +166,7 @@ export default function Map({ navigation }) {
             onPress={() => {
               onLocationPress()
                 .then((res) => {
-                  storeData("Координаты с карты", +res[0], +res[1], 300);
+                  storeData("Координаты с карты", +res[0], +res[1], radius);
                 })
                 .then((res) => {
                   getData("Координаты с карты").then((result) => {
@@ -234,9 +234,13 @@ export default function Map({ navigation }) {
                 rad.push(i + 10);
               }
               setRadiusArray(rad);
-              setRadius(value);
+              setRadius(value[0]);
             }}
             onSlidingComplete={(value) => {
+              getData("Координаты с карты")
+              .then((res)=>{
+                storeData("Координаты с карты", res[1], res[2], radius);
+            })
               dispatch(swapRad({ rad: value[0] }));
             }}
             maximumValue={500}

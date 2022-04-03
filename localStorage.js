@@ -3,8 +3,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 //запись данных в локальное хранилище
-export const storeData = async (name, latitude, longitude, radius, latPred, lonPred) => {
+export const storeData = async (name, latitude, longitude, radius) => {
     try {
+      const latPred = radius/(Math.cos(latitude * (Math.PI/180)) * 111.321377778)
+      const lonPred = radius/111.134861111;
       const jsonValue = JSON.stringify([name, latitude, longitude, radius, latPred, lonPred]);
       await AsyncStorage.setItem(`${name}`, jsonValue);
     } catch (e) {
@@ -18,10 +20,11 @@ export const storeData = async (name, latitude, longitude, radius, latPred, lonP
       if (name){
         const jsonValue = await AsyncStorage.getItem(`${name}`)
         return jsonValue != null ? JSON.parse(jsonValue) : null;
+    
       } 
       else{
         const jsonValue = await getAllKeys().then((res)=>{return res[0]}).then((res)=>{return AsyncStorage.getItem(`${res}`)})
-      return jsonValue != null ? JSON.parse(jsonValue) : null;
+        return jsonValue != null ? JSON.parse(jsonValue) : null;
       }
     } catch(e) {
       // error reading value

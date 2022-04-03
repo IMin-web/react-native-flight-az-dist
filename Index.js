@@ -1,13 +1,11 @@
-import React, { useEffect } from "react";
-import { Alert, DevSettings} from "react-native";
+import React, { useEffect} from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import {
   createBottomTabNavigator
 } from "@react-navigation/bottom-tabs";
-import { createNativeStackNavigator} from "@react-navigation/native-stack";
 import { useSelector, useDispatch } from "react-redux";
 import { selectCoordinate, fetchCoords } from "./store/coordinateSlice";
-import { set, selectData } from "./store/dataSlice";
+import { set} from "./store/dataSlice";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { setAir } from "./store/airSlice";
 import TableComponent from "./TableComponent";
@@ -16,13 +14,16 @@ import Settings from "./Settings";
 import locate from "./locate";
 import Dalnost from "./Dalnost";
 import Azimut from "./Azimut";
-import { getMultiple } from "./localStorage";
+import { getMultiple} from "./localStorage";
 
 export default function Index() {
   const Tab = createBottomTabNavigator();
-  const coordinate = useSelector(selectCoordinate);
   const dispatch = useDispatch();
-  const locBase = useSelector(selectData);
+  const coordinate = useSelector(selectCoordinate);
+  useEffect(() => {
+    dispatch(fetchCoords())
+  }, [dispatch]);
+
 
   useEffect(() => {
     getMultiple().then((res) => {
@@ -31,23 +32,23 @@ export default function Index() {
   }, []);
 
   //extraReducer запроса и вывода координат
-  useEffect(() => {
-    dispatch(fetchCoords());
-  }, [dispatch]);
+
 
   useEffect(() => {
-    let result;
+    let timerId
     //запрос данных с FlightRadar24 по введенным координатам
-    locate(
-      coordinate.lat,
-      coordinate.lon,
-      coordinate.latPred,
-      coordinate.lonPred
-    )
-      .then((res) => {if(res[0]){
-        result = res}
-      else{
-        error}})
+    timerId = setTimeout(
+      function work(){
+      let result;
+      getMultiple().then((res) => {
+        const lat = +res[0][1][1];
+        const lon = +res[0][1][2];
+        const latPred = +res[0][1][4];
+        const lonPred = +res[0][1][5].substring(0, res[0][1][5].length - 1);
+      locate(lat,lon,latPred,lonPred)
+      .then((res) => 
+        result = res)
+
       //добавление в массив результатов дальности до самолета
       .then((res) =>
         result.map((item) => {
@@ -57,10 +58,11 @@ export default function Index() {
       )
       //добавление в массив результатов азимута самолета
       .then((res) => dispatch(set(result)))
-      .catch(() => {
-        dispatch(set(0))
-      });
-  }, locBase[0]);
+      .then((res)=>
+      timerId = setTimeout(work, 2000))
+    })}, 2000)
+  }, 
+[coordinate]);
 
   return (
     <NavigationContainer>
