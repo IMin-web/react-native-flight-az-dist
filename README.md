@@ -10,5 +10,5 @@ React-native версия <a href="https://github.com/IMin-web/flight-az-dist">�
 <img width="250" alt="1" src="https://user-images.githubusercontent.com/25143549/161275500-cd9b0a5f-04f9-40c2-bf5a-894dc7488778.png">
 <img width="250" alt="2" src="https://user-images.githubusercontent.com/25143549/161275516-63b6c97e-30d5-4a56-9023-eaf807d8f612.png">
 <img width="250" alt="3" src="https://user-images.githubusercontent.com/25143549/161275603-0b1e6055-5ec1-4b08-b3ba-602afdcdf82f.png">
-  <img width="250" alt="3" src="https://user-images.githubusercontent.com/25143549/161275637-c78c6680-2558-4033-98ea-e6e77c60deb1.png">
+<img width="250" alt="3" src="https://user-images.githubusercontent.com/25143549/161909346-15b9d3d9-7b78-4d9d-820d-a16a13056921.png">
   <img width="250" alt="3" src="https://user-images.githubusercontent.com/25143549/161275654-82975e01-e2fd-4aea-a92c-c7876f849a77.png">
