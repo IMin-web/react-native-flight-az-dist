@@ -52,7 +52,8 @@ export default function Index() {
           .then((res) => {
             dispatch(set(res));
           })
-          .then((res) => (timerId = setTimeout(work, 1000)));
+          .then((res) => (timerId = setTimeout(work, 1000)))
+          .catch((err) => {console.log(err)})
       });
     }, 1000);
   }, [coordinate]);

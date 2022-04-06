@@ -9,6 +9,7 @@ import { getData, removeValue, storeData, getMultiple} from "../localStorage";
 import { useDispatch } from "react-redux";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { setAir} from "../store/airSlice"
+import { Dimensions } from "react-native";
 
 
 export default function CurrentProfile() {
@@ -16,17 +17,16 @@ export default function CurrentProfile() {
   const [airState, setAirState] = useState();
   const coordinate = useSelector(selectCoordinate); 
   const dispatch = useDispatch();
-  const [name, onChangeName] = useState(coordinate.name);
+  const [name, onChangeName] = useState();
 
   useEffect(() => {
      setAirState(airData)},[airData])
   return (
     <View>
     <View style={settingsStyle.container}>
-      <Text style={settingsStyle.header}>Текущий профиль</Text>
-      <View style={settingsStyle.inputContainer}>
-        <Text style={settingsStyle.text}>Название</Text>
-        <TextInput value={name} style={settingsStyle.input}
+      <Text style={settingsStyle.header}>Текущие координаты</Text>
+      <View style={[settingsStyle.inputContainer, {justifyContent:"center"}]}>
+        <TextInput placeholder="Введите название профиля" value={name} style={[settingsStyle.input,{width:0.9*Dimensions.get("window").width,}]}
         onChangeText={onChangeName}></TextInput>
       </View>
       <View style={settingsStyle.inputContainer}>
@@ -41,14 +41,6 @@ export default function CurrentProfile() {
         <Text style={settingsStyle.text}>Радиус</Text>
         <Text style={settingsStyle.text}>{coordinate.rad}</Text>
       </View>
-      <View style={settingsStyle.inputContainer}>
-        <Text style={settingsStyle.text}>Предел широты</Text>
-        <Text style={settingsStyle.text}>{coordinate.latPred}</Text>
-      </View>
-      <View style={settingsStyle.inputContainer}>
-        <Text style={settingsStyle.text}>Предел долготы</Text>
-        <Text style={settingsStyle.text}>{coordinate.lonPred}</Text>
-      </View>
       <Pressable onPress={async ()=>{
             alert(`Профиль ${name} успешно создан!`);
             storeData(name, coordinate.lat, coordinate.lon, coordinate.rad)
@@ -61,8 +53,8 @@ export default function CurrentProfile() {
               dispatch(setAir(res))})
           });
             }}>
-          <View style={{backgroundColor:'green', height:50}}>
-            <Text style={settingsStyle.text}>Сохранить профиль</Text></View>
+          <View style={settingsStyle.button}>
+            <Text style={[settingsStyle.text, {color:'white'}]}>Сохранить профиль</Text></View>
           </Pressable>
     </View>
     <ScrollView>

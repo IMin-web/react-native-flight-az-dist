@@ -80,7 +80,9 @@ export const settingsStyle = StyleSheet.create({
     height: 40,
     borderColor: "gray",
     borderWidth: 1,
-    width: 0.3 * Dimensions.get("window").height,
+    width: 0.6*Dimensions.get("window").width,
+    paddingLeft:10,
+    paddingRight: 10,
   },
   header: {
     fontSize: 36,
